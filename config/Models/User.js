@@ -42,6 +42,7 @@ const userSchema = new Schema({
   avatar: {
     type: Buffer,
   },
+  timestamps: true,
 });
 
 userSchema.statics.findByCredentials = async (email, password) => {
