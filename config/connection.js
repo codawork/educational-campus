@@ -9,3 +9,7 @@ mongoose.connection.on("open", () => {
 mongoose.connection.on("error", () => {
   console.log("Mongo connection unsuccessful");
 });
+
+mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);

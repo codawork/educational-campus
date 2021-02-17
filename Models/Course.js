@@ -12,13 +12,12 @@ const courseSchema = new Schema(
       required: true,
       trim: true,
     },
-    name: {
+    code: {
       type: String,
       required: true,
       trim: true,
       unique: true,
     },
-    //TODO Definir bien las relaciones
     content: Array,
     exam: Array,
   },
@@ -26,9 +25,7 @@ const courseSchema = new Schema(
 );
 
 courseSchema.statics.findByCode = async (code) => {
-  const course = await Course.findOne({ code });
-  return course;
+  return await Course.findOne({ code });
 };
 
-model.exports = courseSchema;
 module.exports = model("Course", courseSchema);

@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const validator = require("validator");
-
+const bcrypt = require("bcryptjs");
 const userSchema = new Schema(
   {
     name: {
@@ -33,7 +33,7 @@ const userSchema = new Schema(
     },
     age: {
       type: Number,
-      default: 0,
+      default: null,
       validate(value) {
         if (value < 0) {
           throw new Error("Age must be a positive number");
@@ -41,6 +41,7 @@ const userSchema = new Schema(
       },
     },
 
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     avatar: {
       type: Buffer,
     },
@@ -48,6 +49,13 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
 
@@ -68,4 +76,5 @@ userSchema.statics.findByEmail = async (email) => {
   const user = await User.findOne({ email });
   return user;
 };
+
 module.exports = model("User", userSchema);
